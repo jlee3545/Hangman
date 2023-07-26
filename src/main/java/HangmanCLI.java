@@ -1,7 +1,14 @@
 import application.Hangman;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class HangmanCLI {
     public static void main(String[] args) {
-        new Hangman().run();
+        try {
+            new Hangman().run();
+        } catch (NullPointerException e) {
+            System.out.println("Something went wrong");;
+        }
     }
 }
