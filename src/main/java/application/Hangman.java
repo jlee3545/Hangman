@@ -69,29 +69,40 @@ public class Hangman {
         //   * If the user has reached the maximum number of guesses without solving
         //     the secret word, print a message saying: try again.
         int winner = 0;
-        while (wrongGuessesCounter < wrongGuessesMax && guessCounter <= numOfGuesses){
+        String lettersGuessed = "";
+        String formattedString = "";
+        while (wrongGuessesCounter < wrongGuessesMax && guessCounter < numOfGuesses){
             String arrayString = Arrays.toString(stringArr);
-            String formattedString = arrayString.replace("[","").replace("]","").replace(", ", "");
+            formattedString = arrayString.replace("[","").replace("]","").replace(", ", "");
             if(secretWord.equals(formattedString)) {
                 winner++;
                 break;
             }
+
             System.out.println(formattedString);
-            System.out.println("Guesses left: " + (numOfGuesses-guessCounter) + " Wrong Guesses Left: " + (wrongGuessesMax-wrongGuessesCounter));
             System.out.println("**********************************************");
-            System.out.println("Guess a letter: ");
+            System.out.println("Guesses left: " + (numOfGuesses-guessCounter) + " | Wrong Guesses Left: " + (wrongGuessesMax-wrongGuessesCounter));
+            System.out.println("Letters Guessed: " + lettersGuessed);
+            System.out.println("**********************************************");
+            System.out.print("Guess a letter: ");
             String input = scanner.nextLine();
 
             guessCounter++;
             String newLetter = input;
-
+            if (input.contains(" ")) {
+                guessCounter--;
+                wrongGuessesCounter--;
+            }else if((lettersGuessed.contains(input) && formattedString.contains(input))){
+                guessCounter--;
+            }else if (lettersGuessed.contains(input)){
+                continue;
+            } else {
+                lettersGuessed = lettersGuessed + input + " ";
+            }
 
             if(!secretWord.contains(newLetter)){
                 wrongGuessesCounter++;
             }
-
-            System.out.println("**********************************************");
-
             for(int i = 0; i < stringArr.length; i++) {
 
                 if (secretWord.substring(i,i+1).equals(newLetter)) {
@@ -100,11 +111,15 @@ public class Hangman {
             }
         }
         if(winner == 1){
+            System.out.println("ANSWER: " + formattedString);
             System.out.println("You win!!!");
             System.out.println("You solved it in " + guessCounter + " guesses and had " + wrongGuessesCounter+ " failed guesses!");
+            System.out.println("***********************************************************");
         } else if (winner == 0){
+            System.out.println(formattedString);
             System.out.println("You lose! :( The word was " +  "<" + secretWord+ ">.");
             System.out.println("You had " + guessCounter + " guesses and " + wrongGuessesCounter + " failed guesses.");
+            System.out.println("***********************************************************");
         }
 
         // Challenge: add other theme mode for hangman words
